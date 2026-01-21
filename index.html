@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Studio Schizzo | Arq & Urban</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+ 
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { font-family: 'Inter', sans-serif; background: #fff; color: #000; overflow-x: hidden; }
+    .font-studio { font-weight: 900; letter-spacing: -0.05em; font-style: italic; text-transform: uppercase; }
+    
+    /* Estilização do Scroll Horizontal da Home */
+    .horizontal-scroll { display: flex; overflow-x: auto; gap: 1rem; padding-bottom: 20px; scrollbar-width: none; }
+    .horizontal-scroll::-webkit-scrollbar { display: none; }
+    .snap-card { flex: 0 0 85vw; } 
+    
+    @media (min-width: 768px) {
+      .horizontal-scroll { display: grid; grid-template-columns: repeat(3, 1fr); overflow-x: visible; }
+      .snap-card { flex: none; width: auto; }
+    }
+
+    /* Transições de Página */
+    .page-section { display: none; animation: fadeIn 0.5s ease; padding-top: 80px; min-height: 100vh; }
+    .active-page { display: block !important; }
+    
+    @keyframes fadeIn { 
+      from { opacity: 0; transform: translateY(10px); } 
+      to { opacity: 1; transform: translateY(0); } 
+    }
+
+    #menu-overlay { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+    /* EFEITO DE COR AO ROLAR (CELULAR) */
+    .reveal-image { filter: grayscale(100%); transition: all 0.8s ease; }
+    .reveal-image.is-visible { filter: grayscale(0%) !important; }
+    /* Garante que o que não é ativo fique escondido */
+    .page-section {
+      display: none; 
+    }
+    /* Mostra apenas a seção que tiver a classe active-page */
+    .page-section.active-page {
+      display: block !important;
+    }
+  </style>
+</head>
+
+<body class="antialiased selection:bg-black selection:text-white">
+
+  <nav class="fixed top-0 w-full z-40 bg-white/90 backdrop-blur-md border-b border-gray-100 h-20 flex justify-between items-center px-6">
+
+    <div onclick="navigate('home')" class="font-studio text-xl cursor-pointer z-50">STUDIO SCHIZZO</div>
+
+    <button onclick="toggleMenu()" class="z-50 p-2 focus:outline-none group">
+
+      <div class="w-6 h-0.5 bg-black mb-1.5 transition-all group-hover:w-8"></div>
+
+      <div class="w-6 h-0.5 bg-black transition-all group-hover:w-4 ml-auto"></div>
+
+    </button>
+
+  </nav>
+
+  <div id="menu-overlay" class="fixed inset-0 bg-white z-30 translate-x-full flex flex-col justify-center px-10">
+    <div class="flex flex-col gap-8 text-4xl md:text-6xl font-studio text-right">
+      <a onclick="navigate('home')" class="cursor-pointer hover:text-gray-400 transition-colors">Home</a>
+      <a onclick="navigate('portfolio-full')" class="cursor-pointer hover:text-gray-400 transition-colors">Portfólio</a>
+      <a onclick="navigate('sobre-full')" class="cursor-pointer hover:text-gray-400 transition-colors">Sobre Nós</a>
+      <a onclick="navigate('orcamento')" class="cursor-pointer text-blue-600 hover:text-black transition-colors">Solicitar Orçamento</a>
+    </div>
+  </div>
+
+  <div id="gallery-overlay" class="fixed inset-0 bg-black/95 z-[60] hidden flex flex-col justify-center items-center transition-opacity duration-300 opacity-0">
+    <button onclick="closeGallery()" class="absolute top-6 right-6 text-white hover:text-gray-400 z-50">
+      <i class="fa-solid fa-xmark text-4xl"></i>
+    </button>
+    <div class="relative w-full max-w-7xl flex items-center justify-center gap-2 px-2 h-[70vh]">
+      <button onclick="changeSlide(-1)" class="text-white p-4 z-50 absolute left-2 md:static">
+        <i class="fa-solid fa-chevron-left text-3xl md:text-5xl"></i>
+      </button>
+      <div id="carousel-container" class="flex items-center justify-center w-full h-full relative"></div>
+      <button onclick="changeSlide(1)" class="text-white p-4 z-50 absolute right-2 md:static">
+        <i class="fa-solid fa-chevron-right text-3xl md:text-5xl"></i>
+      </button>
+    </div>
+    <div class="absolute bottom-10 text-center w-full px-4 text-white">
+      <h3 id="gallery-title" class="font-studio text-xl md:text-3xl uppercase tracking-widest"></h3>
+    </div>
+  </div>
+
+  <main id="home" class="page-section active-page">
+     <header class="px-6 py-12 md:py-20 mb-8 max-w-7xl mx-auto">
+      <span class="text-[10px] font-bold uppercase tracking-[0.4em] text-gray-400 block mb-4">Arquitetura & Interiores</span>
+      <h1 class="text-6xl md:text-9xl font-studio leading-[0.85] uppercase">Studio<br/>Schizzo.</h1>
+    </header>
+    <section class="mb-20 px-6 md:px-12 max-w-7xl mx-auto">
+      <div class="flex justify-between items-end mb-6">
+        <h2 class="text-xs font-bold uppercase tracking-widest text-gray-500">Projetos Selecionados</h2>
+        <button onclick="navigate('portfolio-full')" class="text-[10px] font-black underline uppercase">Ver Todos</button>
+      </div>
+      <div class="horizontal-scroll md:gap-8">
+        <div class="snap-card cursor-pointer group" onclick="openGallery(0)">
+          <div class="aspect-[4/5] bg-gray-200 overflow-hidden mb-4 relative rounded-lg">
+             <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=800" 
+                  class="reveal-image w-full h-full object-cover group-hover:grayscale-0 transition-all duration-700" />
+          </div>
+          <h3 class="font-studio text-2xl uppercase leading-none">Residência Viana</h3>
+          <p class="text-[10px] font-bold uppercase text-gray-400 mt-1">Interiores Luxo — Anápolis</p>
+        </div>
+        <div class="snap-card cursor-pointer group" onclick="openGallery(1)">
+          <div class="aspect-[4/5] bg-gray-200 overflow-hidden mb-4 relative rounded-lg">
+            <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=800" 
+                 class="reveal-image w-full h-full object-cover group-hover:grayscale-0 transition-all duration-700" />
+          </div>
+          <h3 class="font-studio text-2xl uppercase leading-none">Penthouse Ipanema</h3>
+          <p class="text-[10px] font-bold uppercase text-gray-400 mt-1">Reforma Alto Padrão</p>
+        </div>
+        <div class="snap-card cursor-pointer group" onclick="openGallery(2)">
+          <div class="aspect-[4/5] bg-gray-200 overflow-hidden mb-4 relative rounded-lg">
+            <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800" 
+                 class="reveal-image w-full h-full object-cover group-hover:grayscale-0 transition-all duration-700" />
+          </div>
+          <h3 class="font-studio text-2xl uppercase leading-none">Loft Contemporâneo</h3>
+          <p class="text-[10px] font-bold uppercase text-gray-400 mt-1">Comercial</p>
+        </div>
+      </div>
+    </section>
+
+     <section class="px-6 md:px-12 mb-10 max-w-7xl mx-auto">
+      <h2 class="font-studio text-4xl mb-8">A Essência.</h2>
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div class="aspect-[4/3] bg-gray-200 overflow-hidden rounded-[2rem] group">
+           <img src="https://i.postimg.cc/23pkk5gZ/IMG-3608.avif" 
+                class="reveal-image w-full h-full object-cover group-hover:grayscale-0 transition-all duration-700" />
+        </div>
+        <div>
+          <h3 class="text-2xl font-bold uppercase mb-6 italic">Prazer, somos Isabella & Julia</h3>
+          <p class="text-sm text-gray-600 leading-relaxed text-justify">
+            Arquitetas e urbanistas com mais de 6 anos de experiência, criamos projetos que traduzem o estilo de vida de cada cliente com elegância, funcionalidade e soluções bem resolvidas.
+          </p>
+          <div class="mt-6 flex gap-4">
+            <span class="text-[10px] font-black uppercase border px-3 py-1 rounded-full">Arquitetura</span>
+            <span class="text-[10px] font-black uppercase border px-3 py-1 rounded-full">Interiores</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="px-6 md:px-12 mb-8 max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-0 border-t border-b border-gray-100">
+        
+        <div class="flex flex-col justify-center p-8 md:p-20 bg-white">
+          <div class="border-l-4 border-black pl-6 md:pl-8 py-2">
+            <p class="text-[10px] font-bold uppercase tracking-[0.4em] text-gray-400 mb-6">Localização & Atuação</p>
+            
+            <div class="space-y-4">
+              <div class="group cursor-default">
+                <p class="text-3xl md:text-2xl font-studio uppercase leading-none text-gray-300 group-hover:text-black group-hover:pl-2 transition-all duration-700">Goiânia — GO</p>
+                <p class="h-0 overflow-hidden group-hover:h-auto text-xs text-gray-500 mt-0 opacity-0 group-hover:opacity-100 transition-all duration-500 delay-75 uppercase tracking-widest">Sede    Principal</p>
+              </div>
+
+              <div class="group cursor-default">
+                <p class="text-3xl md:text-2xl font-studio uppercase leading-none text-gray-300 group-hover:text-black group-hover:pl-2 transition-all duration-700">Brasília — DF</p>
+              </div>
+
+              <div class="group cursor-default">
+                <p class="text-3xl md:text-2xl font-studio uppercase leading-none text-gray-300 group-hover:text-black group-hover:pl-2 transition-all duration-700">Anápolis — GO</p>
+              </div>
+            </div>
+
+          </div>
+          
+          <p class="mt-0 md:mt-0 text-xs text-gray-400 leading-relaxed max-w-sm text-justify">
+            Disponível para projetos presenciais nas regiões selecionadas e consultoria online para todo o Brasil e exterior.
+          </p>
+        </div>
+
+      </div>
+    </section>
+    <section class="w-full mb-0 overflow-hidden">
+      <div class="relative h-64 md:h-96 overflow-hidden group w-full">
+            <img src="https://images.unsplash.com/photo-1486718448742-163732cd1544?q=80&w=1000&auto=format&fit=crop" 
+                 class="absolute inset-0 w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105 grayscale"
+                 alt="Textura Arquitetônica">
+            <div class="absolute inset-0 bg-black/10"></div>
+      </div>
+    </section>
+
+    <a href="https://wa.me/5562992470702" target="_blank" class="fixed bottom-24 right-6 z-50 bg-[#25D366] text-white w-14 h-14 flex items-center justify-center rounded-full shadow-xl hover:scale-110 transition-transform cursor-pointer">
+        <i class="fa-brands fa-whatsapp text-3xl"></i>
+    </a>
+
+    <div class="fixed bottom-0 left-0 w-full bg-white/95 backdrop-blur border-t border-gray-100 z-40 py-4 px-6 md:px-12 flex flex-col md:flex-row justify-between items-center gap-3 text-[10px] font-bold uppercase tracking-widest text-gray-500">
+        <div class="flex items-center gap-6 order-2 md:order-1">
+            <a href="mailto:arq.schizzo@gmail.com" class="hover:text-black transition">Email</a>
+            <div class="w-px h-3 bg-gray-300"></div>
+            <a href="https://www.instagram.com/arquitetura.schizzo" target="_blank" class="text-lg hover:text-black transition"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://www.tiktok.com/@arquitetura.schizzo" target="_blank" class="text-lg hover:text-black transition"><i class="fa-brands fa-tiktok"></i></a>
+            <a href="https://pin.it/6ohZCjaaB" target="_blank" class="text-lg hover:text-black transition"><i class="fa-brands fa-pinterest-p"></i></a>
+        </div>
+        
+        <div class="order-1 md:order-2 text-gray-400">
+            studioschizzo@2026
+        </div>
+    </div>
+</main>
+
+
+  <main id="portfolio-full" class="page-section bg-white px-6">
+    <div class="max-w-7xl mx-auto py-12">
+      <header class="mb-12">
+        <span class="text-[10px] font-bold uppercase tracking-[0.4em] text-gray-400 block mb-2">Acervo Completo</span>
+        <h2 class="text-5xl md:text-7xl font-studio italic uppercase">Portfólio.</h2>
+      </header>
+
+      <div id="grid-portfolio" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        </div>
+    </div>
+  </main>
+
+  <main id="sobre-full" class="page-section bg-white px-6">
+    <div class="max-w-7xl mx-auto py-12">
+      <h2 class="text-5xl md:text-7xl font-studio italic uppercase mb-12">Sobre Nós.</h2>
+      <p class="text-gray-500 italic">Área em desenvolvimento para depoimentos e equipe...</p>
+    </div>
+  </main>
+
+  <main id="orcamento" class="page-section bg-black text-white px-6">
+    <div class="max-w-4xl mx-auto py-12">
+      <h2 class="text-5xl md:text-7xl font-studio mb-12 italic uppercase">Solicitar Orçamento.</h2>
+      <form id="form-orcamento" class="grid md:grid-cols-2 gap-8">
+        <div class="flex flex-col border-b border-gray-800 pb-2">
+          <label class="text-[10px] uppercase text-gray-500 mb-2">Nome Completo</label>
+          <input type="text" id="nome" required class="bg-transparent outline-none text-xl font-light">
+        </div>
+        <div class="flex flex-col border-b border-gray-800 pb-2">
+          <label class="text-[10px] uppercase text-gray-500 mb-2">WhatsApp</label>
+          <input type="tel" id="telefone" required class="bg-transparent outline-none text-xl font-light">
+        </div>
+        <div class="md:col-span-2 pt-8">
+          <button type="button" onclick="enviarParaWhatsapp()" class="w-full bg-white text-black font-studio text-xl py-5 rounded-full uppercase">
+            Enviar Solicitação
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script>
+    // --- DADOS DOS PROJETOS ---
+    // Você pode adicionar quantos projetos quiser aqui seguindo o modelo.
+    const projectsData = [
+      { id: 0, title: "Residência Viana", location: "Anápolis", thumb: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=800", images: ["https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=800", "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=800"] },
+      { id: 1, title: "Penthouse Ipanema", location: "Rio de Janeiro", thumb: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=800", images: ["https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=800"] },
+      { id: 2, title: "Loft Contemporâneo", location: "São Paulo", thumb: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800", images: ["https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800"] },
+      // Exemplo de como adicionar mais:
+      { id: 3, title: "Casa do Lago", location: "Goiânia", thumb: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800", images: ["https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800"] },
+    ];
+
+    // --- FUNÇÃO DE NAVEGAÇÃO ---
+    // Esconde todas as seções e mostra apenas a clicada.
+    function navigate(pageId) {
+      document.getElementById('menu-overlay').classList.add('translate-x-full');
+      document.querySelectorAll('.page-section').forEach(section => {
+        section.classList.remove('active-page');
+      });
+      const target = document.getElementById(pageId);
+      if (target) {
+        target.classList.add('active-page');
+        window.scrollTo(0, 0);
+      }
+    }
+
+    // --- RENDERIZAR PORTFÓLIO COMPLETO ---
+    // Esta função cria os cards de portfólio dinamicamente no grid.
+    function renderPortfolio() {
+      const grid = document.getElementById('grid-portfolio');
+      grid.innerHTML = projectsData.map(proj => `
+        <div class="cursor-pointer group" onclick="openGallery(${proj.id})">
+          <div class="aspect-square bg-gray-100 overflow-hidden mb-4 rounded-xl">
+            <img src="${proj.thumb}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 grayscale hover:grayscale-0">
+          </div>
+          <h3 class="font-studio text-xl uppercase">${proj.title}</h3>
+          <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">${proj.location}</p>
+        </div>
+      `).join('');
+    }
+
+    // Chama a renderização ao carregar o site
+    renderPortfolio();
+
+    // --- CONTROLE DE MENU ---
+    function toggleMenu() {
+      document.getElementById('menu-overlay').classList.toggle('translate-x-full');
+    }
+
+    // --- CONTROLE DA GALERIA (LIGHTBOX) ---
+    let currentProject = 0;
+    let currentImageIndex = 0;
+
+    function openGallery(projectId) {
+      currentProject = projectId;
+      currentImageIndex = 0;
+      const overlay = document.getElementById('gallery-overlay');
+      overlay.classList.remove('hidden');
+      setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+      updateCarousel();
+    }
+
+    function closeGallery() {
+      const overlay = document.getElementById('gallery-overlay');
+      overlay.classList.add('opacity-0');
+      setTimeout(() => overlay.classList.add('hidden'), 300);
+    }
+
+    function updateCarousel() {
+      const data = projectsData[currentProject];
+      const container = document.getElementById('carousel-container');
+      const total = data.images.length;
+      const prev = (currentImageIndex - 1 + total) % total;
+      const next = (currentImageIndex + 1) % total;
+      document.getElementById('gallery-title').innerText = data.title;
+      container.innerHTML = `
+        <img src="${data.images[prev]}" class="absolute left-[-10%] md:left-0 h-40 md:h-64 opacity-30 scale-75 blur-[1px] hidden md:block">
+        <img src="${data.images[currentImageIndex]}" class="z-20 h-auto max-h-[60vh] md:max-h-[70vh] max-w-[90vw] shadow-2xl rounded-lg">
+        <img src="${data.images[next]}" class="absolute right-[-10%] md:right-0 h-40 md:h-64 opacity-30 scale-75 blur-[1px] hidden md:block">
+      `;
+    }
+
+    function changeSlide(dir) {
+      const proj = projectsData.find(p => p.id === currentProject);
+      currentImageIndex = (currentImageIndex + dir + proj.images.length) % proj.images.length;
+      updateCarousel();
+    }
+
+    // --- WHATSAPP ---
+    function enviarParaWhatsapp() {
+      const nome = document.getElementById('nome').value;
+      const tel = document.getElementById('telefone').value;
+      if (!nome || !tel) { alert("Preencha nome e telefone!"); return; }
+      
+      const texto = `*SOLICITAÇÃO DE ORÇAMENTO*%0A*Nome:* ${nome}%0A*Telefone:* ${tel}`;
+      window.open(`https://wa.me/5562992470702?text=${texto}`, '_blank');
+    }
+  </script>
+</body>
+</html>
