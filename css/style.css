@@ -1,0 +1,35 @@
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { font-family: 'Inter', sans-serif; background: #fff; color: #000; overflow-x: hidden; }
+    .font-studio { font-weight: 900; letter-spacing: -0.05em; font-style: italic; text-transform: uppercase; }
+
+    /* Estilização do Scroll Horizontal da Home */
+    .horizontal-scroll { display: flex; overflow-x: auto; gap: 1rem; padding-bottom: 20px; scrollbar-width: none; }
+    .horizontal-scroll::-webkit-scrollbar { display: none; }
+    .snap-card { flex: 0 0 85vw; }
+
+    @media (min-width: 768px) {
+      .horizontal-scroll { display: grid; grid-template-columns: repeat(3, 1fr); overflow-x: visible; }
+      .snap-card { flex: none; width: auto; }
+    }
+
+    /* Transições de Página */
+    .page-section { display: none; animation: fadeIn 0.5s ease; padding-top: 80px; min-height: 100vh; }
+    .active-page { display: block !important; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    #menu-overlay { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+    /* EFEITO DE COR AO ROLAR (CELULAR) */
+    .reveal-image { filter: grayscale(100%); transition: all 0.8s ease; }
+    .reveal-image.is-visible { filter: grayscale(0%) !important; }
+    /* Garante que o que não é ativo fique escondido */
+    .page-section {
+      display: none;
+    }
+    /* Mostra apenas a seção que tiver a classe active-page */
+    .page-section.active-page {
+      display: block !important;
+    }

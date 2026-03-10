@@ -1,9 +1,7 @@
-
 <!DOCTYPE html>
 <html>
 <head>
   <base target="_top">
-
   <meta name="description" content="Studio Schizzo - Arquitetas Isabella & Julia. Projetos de interiores e reformas de alto padrão em Goiânia, Brasília e Anápolis.">
   <meta property="og:title" content="Studio Schizzo | Arq & Urban">
   <meta property="og:description" content="Projetos de interiores e reformas de alto padrão com elegância e funcionalidade.">
@@ -21,61 +19,12 @@
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body { font-family: 'Inter', sans-serif; background: #fff; color: #000; overflow-x: hidden; }
-    .font-studio { font-weight: 900; letter-spacing: -0.05em; font-style: italic; text-transform: uppercase; }
-
-    /* Estilização do Scroll Horizontal da Home */
-    .horizontal-scroll { display: flex; overflow-x: auto; gap: 1rem; padding-bottom: 20px; scrollbar-width: none; }
-    .horizontal-scroll::-webkit-scrollbar { display: none; }
-    .snap-card { flex: 0 0 85vw; }
-
-    @media (min-width: 768px) {
-      .horizontal-scroll { display: grid; grid-template-columns: repeat(3, 1fr); overflow-x: visible; }
-      .snap-card { flex: none; width: auto; }
-    }
-
-    /* Transições de Página */
-    .page-section { display: none; animation: fadeIn 0.5s ease; padding-top: 80px; min-height: 100vh; }
-    .active-page { display: block !important; }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    #menu-overlay { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-    /* EFEITO DE COR AO ROLAR (CELULAR) */
-    .reveal-image { filter: grayscale(100%); transition: all 0.8s ease; }
-    .reveal-image.is-visible { filter: grayscale(0%) !important; }
-    /* Garante que o que não é ativo fique escondido */
-    .page-section {
-      display: none;
-    }
-    /* Mostra apenas a seção que tiver a classe active-page */
-    .page-section.active-page {
-      display: block !important;
-    }
-  </style>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body class="antialiased selection:bg-black selection:text-white">
 
-  <nav class="fixed top-0 w-full z-40 bg-white/90 backdrop-blur-md border-b border-gray-100 h-20 flex justify-between items-center px-6">
-
-    <div onclick="navigate('home')" class="font-studio text-xl cursor-pointer z-50">STUDIO SCHIZZO</div>
-
-    <button onclick="toggleMenu()" class="z-50 p-2 focus:outline-none group" aria-label="Abrir menu">
-
-      <div class="w-6 h-0.5 bg-black mb-1.5 transition-all group-hover:w-8"></div>
-
-      <div class="w-6 h-0.5 bg-black transition-all group-hover:w-4 ml-auto"></div>
-
-    </button>
-
-  </nav>
+  <div id="header-placeholder"></div>
 
   <div id="menu-overlay" class="fixed inset-0 bg-white z-30 translate-x-full flex flex-col justify-center px-10">
     <div class="flex flex-col gap-8 text-4xl md:text-6xl font-studio text-right">
@@ -114,32 +63,7 @@
         <h2 class="text-xs font-bold uppercase tracking-widest text-gray-500">Projetos Selecionados</h2>
         <button onclick="navigate('portfolio-full')" class="text-[10px] font-black underline uppercase">Ver Todos</button>
       </div>
-      <div class="horizontal-scroll md:gap-8">
-        <div class="snap-card cursor-pointer group" onclick="openGallery(0)">
-          <div class="aspect-[4/5] bg-gray-200 overflow-hidden mb-4 relative rounded-lg">
-             <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=800" 
-                  class="reveal-image w-full h-full object-cover group-hover:grayscale-0 transition-all duration-700" />
-          </div>
-          <h3 class="font-studio text-2xl uppercase leading-none">Residência Viana</h3>
-          <p class="text-[10px] font-bold uppercase text-gray-400 mt-1">Interiores Luxo — Anápolis</p>
-        </div>
-        <div class="snap-card cursor-pointer group" onclick="openGallery(1)">
-          <div class="aspect-[4/5] bg-gray-200 overflow-hidden mb-4 relative rounded-lg">
-            <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=800" 
-                 class="reveal-image w-full h-full object-cover group-hover:grayscale-0 transition-all duration-700" />
-          </div>
-          <h3 class="font-studio text-2xl uppercase leading-none">Penthouse Ipanema</h3>
-          <p class="text-[10px] font-bold uppercase text-gray-400 mt-1">Reforma Alto Padrão</p>
-        </div>
-        <div class="snap-card cursor-pointer group" onclick="openGallery(2)">
-          <div class="aspect-[4/5] bg-gray-200 overflow-hidden mb-4 relative rounded-lg">
-            <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800" 
-                 class="reveal-image w-full h-full object-cover group-hover:grayscale-0 transition-all duration-700" />
-          </div>
-          <h3 class="font-studio text-2xl uppercase leading-none">Loft Contemporâneo</h3>
-          <p class="text-[10px] font-bold uppercase text-gray-400 mt-1">Comercial</p>
-        </div>
-      </div>
+      <div id="home-projects-grid" class="horizontal-scroll md:gap-8"></div>
     </section>
 
      <section class="px-6 md:px-12 mb-10 max-w-7xl mx-auto">
@@ -206,20 +130,8 @@
     <a href="https://wa.me/5562992470702" target="_blank" class="fixed bottom-24 right-6 z-50 bg-[#25D366] text-white w-14 h-14 flex items-center justify-center rounded-full shadow-xl hover:scale-110 transition-transform cursor-pointer" rel="noopener">
         <i class="fa-brands fa-whatsapp text-3xl"></i>
     </a>
-
-    <div class="fixed bottom-0 left-0 w-full bg-white/95 backdrop-blur border-t border-gray-100 z-40 py-4 px-6 md:px-12 flex flex-col md:flex-row justify-between items-center gap-3 text-[10px] font-bold uppercase tracking-widest text-gray-500">
-        <div class="flex items-center gap-6 order-2 md:order-1">
-            <a href="mailto:arq.schizzo@gmail.com" class="hover:text-black transition">Email</a>
-            <div class="w-px h-3 bg-gray-300"></div>
-            <a href="https://www.instagram.com/arquitetura.schizzo" target="_blank" class="text-lg hover:text-black transition" rel="noopener"><i class="fa-brands fa-instagram"></i></a>
-            <a href="https://www.tiktok.com/@arquitetura.schizzo" target="_blank" class="text-lg hover:text-black transition" rel="noopener"><i class="fa-brands fa-tiktok"></i></a>
-            <a href="https://pin.it/6ohZCjaaB" target="_blank" class="text-lg hover:text-black transition" rel="noopener"><i class="fa-brands fa-pinterest-p"></i></a>
-        </div>
-
-        <div class="order-1 md:order-2 text-gray-400">
-            studioschizzo@2026
-        </div>
-    </div>
+    
+    <div id="footer-placeholder"></div>
 </main>
 
 
@@ -264,122 +176,6 @@
   </main>
 
   <script src="projects.js"></script>
-  <script>
-    // --- DADOS DOS PROJETOS ---
-    // Você pode adicionar quantos projetos quiser aqui seguindo o modelo.
-    const projectsData = [
-      { id: 0, title: "Residência Viana", location: "Anápolis", thumb: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=800", images: ["https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=800", "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=800"] },
-      { id: 1, title: "Penthouse Ipanema", location: "Rio de Janeiro", thumb: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=800", images: ["https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=800"] },
-      { id: 2, title: "Loft Contemporâneo", location: "São Paulo", thumb: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800", images: ["https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800"] },
-      // Exemplo de como adicionar mais:
-      { id: 3, title: "Casa do Lago", location: "Goiânia", thumb: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800", images: ["https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800"] },
-    ];
-
-    // --- FUNÇÃO DE NAVEGAÇÃO ---
-    function navigate(pageId) {
-      document.getElementById('menu-overlay').classList.add('translate-x-full');
-      document.querySelectorAll('.page-section').forEach(section => {
-        section.classList.remove('active-page');
-      });
-      const target = document.getElementById(pageId);
-      if (target) {
-        target.classList.add('active-page');
-        window.scrollTo(0, 0);
-      }
-    }
-
-    // --- RENDERIZAR PROJETOS NA HOME ---
-    function renderHomeProjects() {
-      const grid = document.getElementById('home-projects-grid');
-      // Pega apenas os 3 primeiros projetos para a home
-      const homeProjects = projectsData.slice(0, 3);
-      grid.innerHTML = homeProjects.map(proj => `
-        <div class="snap-card cursor-pointer group" onclick="openGallery(${proj.id})">
-          <div class="aspect-[4/5] bg-gray-200 overflow-hidden mb-4 relative rounded-lg">
-             <img src="${proj.thumb}" 
-                  class="reveal-image w-full h-full object-cover group-hover:grayscale-0 transition-all duration-700" />
-          </div>
-          <h3 class="font-studio text-2xl uppercase leading-none">${proj.title}</h3>
-          <p class="text-[10px] font-bold uppercase text-gray-400 mt-1">${proj.location}</p>
-        </div>
-      `).join('');
-    }
-
-    // --- RENDERIZAR PORTFÓLIO COMPLETO ---
-    function renderPortfolio() {
-      const grid = document.getElementById('grid-portfolio');
-      grid.innerHTML = projectsData.map(proj => `
-        <div class="cursor-pointer group" onclick="openGallery(${proj.id})">
-          <div class="aspect-square bg-gray-100 overflow-hidden mb-4 rounded-xl">
-            <img src="${proj.thumb}" alt="${proj.alt}" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 grayscale hover:grayscale-0">
-          </div>
-          <h3 class="font-studio text-xl uppercase">${proj.title}</h3>
-          <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">${proj.location}</p>
-        </div>
-      `).join('');
-    }
-
-    // Chama a renderização ao carregar o site
-    document.addEventListener('DOMContentLoaded', (event) => {
-        renderHomeProjects();
-        renderPortfolio();
-    });
-
-    // --- CONTROLE DE MENU ---
-    function toggleMenu() {
-      document.getElementById('menu-overlay').classList.toggle('translate-x-full');
-    }
-
-    // --- CONTROLE DA GALERIA (LIGHTBOX) ---
-    let currentProject = 0;
-    let currentImageIndex = 0;
-
-    function openGallery(projectId) {
-      const project = projectsData.find(p => p.id === projectId);
-      if (!project) return;
-      currentProject = projectId;
-      currentImageIndex = 0;
-      const overlay = document.getElementById('gallery-overlay');
-      overlay.classList.remove('hidden');
-      setTimeout(() => overlay.classList.remove('opacity-0'), 10);
-      updateCarousel();
-    }
-
-    function closeGallery() {
-      const overlay = document.getElementById('gallery-overlay');
-      overlay.classList.add('opacity-0');
-      setTimeout(() => overlay.classList.add('hidden'), 300);
-    }
-
-    function updateCarousel() {
-      const data = projectsData.find(p => p.id === currentProject);
-      const container = document.getElementById('carousel-container');
-      const total = data.images.length;
-      const prev = (currentImageIndex - 1 + total) % total;
-      const next = (currentImageIndex + 1) % total;
-      document.getElementById('gallery-title').innerText = data.title;
-      container.innerHTML = `
-        <img src="${data.images[prev]}" alt="${data.title}" loading="lazy" decoding="async" class="absolute left-[-10%] md:left-0 h-40 md:h-64 opacity-30 scale-75 blur-[1px] hidden md:block">
-        <img src="${data.images[currentImageIndex]}" alt="${data.title}" loading="lazy" decoding="async" class="z-20 h-auto max-h-[60vh] md:max-h-[70vh] max-w-[90vw] shadow-2xl rounded-lg">
-        <img src="${data.images[next]}" alt="${data.title}" loading="lazy" decoding="async" class="absolute right-[-10%] md:right-0 h-40 md:h-64 opacity-30 scale-75 blur-[1px] hidden md:block">
-      `;
-    }
-
-    function changeSlide(dir) {
-      const proj = projectsData.find(p => p.id === currentProject);
-      currentImageIndex = (currentImageIndex + dir + proj.images.length) % proj.images.length;
-      updateCarousel();
-    }
-
-    // --- WHATSAPP ---
-    function enviarParaWhatsapp() {
-      const nome = document.getElementById('nome').value;
-      const tel = document.getElementById('telefone').value;
-      if (!nome || !tel) { alert("Preencha nome e telefone!"); return; }
-
-      const texto = `*SOLICITAÇÃO DE ORÇAMENTO*%0A*Nome:* ${nome}%0A*Telefone:* ${tel}`;
-      window.open(`https://wa.me/5562992470702?text=${texto}`, '_blank');
-    }
-  </script>
+  <script src="js/main.js"></script>
 </body>
 </html>
