@@ -1,35 +1,105 @@
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body { font-family: 'Inter', sans-serif; background: #fff; color: #000; overflow-x: hidden; }
-    .font-studio { font-weight: 900; letter-spacing: -0.05em; font-style: italic; text-transform: uppercase; }
+/* === BASE STYLES (MOBILE-FIRST) === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
 
-    /* Estilização do Scroll Horizontal da Home */
-    .horizontal-scroll { display: flex; overflow-x: auto; gap: 1rem; padding-bottom: 20px; scrollbar-width: none; }
-    .horizontal-scroll::-webkit-scrollbar { display: none; }
-    .snap-card { flex: 0 0 85vw; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: #fff;
+  color: #000;
+  overflow-x: hidden;
+}
 
-    @media (min-width: 768px) {
-      .horizontal-scroll { display: grid; grid-template-columns: repeat(3, 1fr); overflow-x: visible; }
-      .snap-card { flex: none; width: auto; }
-    }
+img {
+  max-width: 100%;
+  height: auto;
+  display: block; /* Remove o espaço extra abaixo das imagens */
+}
 
-    /* Transições de Página */
-    .page-section { display: none; animation: fadeIn 0.5s ease; padding-top: 80px; min-height: 100vh; }
-    .active-page { display: block !important; }
+.font-studio {
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  font-style: italic;
+  text-transform: uppercase;
+}
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+/* Estilização do Scroll Horizontal da Home */
+.horizontal-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem; /* Espaçamento para mobile */
+  padding-bottom: 20px;
+  scrollbar-width: none; /* Firefox */
+}
 
-    #menu-overlay { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-    /* EFEITO DE COR AO ROLAR (CELULAR) */
-    .reveal-image { filter: grayscale(100%); transition: all 0.8s ease; }
-    .reveal-image.is-visible { filter: grayscale(0%) !important; }
-    /* Garante que o que não é ativo fique escondido */
-    .page-section {
-      display: none;
-    }
-    /* Mostra apenas a seção que tiver a classe active-page */
-    .page-section.active-page {
-      display: block !important;
-    }
+.horizontal-scroll::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.snap-card {
+  flex: 0 0 85vw; /* Ocupa 85% da largura da tela no mobile */
+}
+
+/* Transições de Página e Animações */
+.page-section {
+  display: none;
+  animation: fadeIn 0.5s ease;
+  padding-top: 80px;
+  min-height: 100vh;
+}
+
+.active-page {
+  display: block !important;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#menu-overlay {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Efeito de imagem em escala de cinza */
+.reveal-image {
+  filter: grayscale(100%);
+  transition: all 0.8s ease;
+}
+
+.reveal-image.is-visible {
+  filter: grayscale(0%) !important;
+}
+
+/* Garante que botões e links tenham área de toque mínima */
+button, [onclick], .cursor-pointer, a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* === PROGRESSIVE ENHANCEMENT (TABLETS) === */
+@media (min-width: 768px) {
+  .horizontal-scroll {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    overflow-x: visible;
+    gap: 2rem; /* Aumenta o espaçamento para tablets */
+  }
+
+  .snap-card {
+    flex: none;
+    width: auto;
+  }
+}
+
+/* === PROGRESSIVE ENHANCEMENT (DESKTOP) === */
+@media (min-width: 1024px) {
+  .horizontal-scroll {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
