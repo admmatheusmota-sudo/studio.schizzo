@@ -31,7 +31,17 @@
       <a onclick="navigate('home')" class="cursor-pointer hover:text-gray-400 transition-colors">Home</a>
       <a onclick="navigate('portfolio-full')" class="cursor-pointer hover:text-gray-400 transition-colors">Portfólio</a>
       <a onclick="navigate('sobre-full')" class="cursor-pointer hover:text-gray-400 transition-colors">Sobre Nós</a>
-      <a onclick="navigate('orcamento')" class="cursor-pointer text-blue-600 hover:text-black transition-colors">Solicitar Orçamento</a>
+      <a onclick="openOrcamentoForm()" class="cursor-pointer text-blue-600 hover:text-black transition-colors">Solicitar Orçamento</a>
+    </div>
+  </div>
+
+  <!-- Overlay do Formulário de Orçamento -->
+  <div id="orcamento-overlay" class="fixed inset-0 bg-black/80 z-[60] hidden flex-col justify-center items-center transition-opacity duration-300 opacity-0 p-4">
+    <button onclick="closeOrcamentoForm()" class="absolute top-6 right-6 text-white hover:text-gray-400 z-50">
+      <i class="fa-solid fa-xmark text-4xl"></i>
+    </button>
+    <div id="orcamento-modal" class="bg-white rounded-2xl w-full max-w-lg h-auto max-h-[80vh] flex flex-col p-8 relative overflow-hidden">
+        <!-- Etapas do Formulário serão renderizadas aqui -->
     </div>
   </div>
 
@@ -154,24 +164,11 @@
     </div>
   </main>
 
-  <main id="orcamento" class="page-section bg-black text-white px-6">
+  <main id="orcamento" class="page-section bg-white px-6">
     <div class="max-w-4xl mx-auto py-12">
+      <!-- O formulário antigo foi removido. A nova funcionalidade é um overlay. -->
       <h2 class="text-5xl md:text-7xl font-studio mb-12 italic uppercase">Solicitar Orçamento.</h2>
-      <form id="form-orcamento" class="grid md:grid-cols-2 gap-8">
-        <div class="flex flex-col border-b border-gray-800 pb-2">
-          <label class="text-[10px] uppercase text-gray-500 mb-2">Nome Completo</label>
-          <input type="text" id="nome" required class="bg-transparent outline-none text-xl font-light">
-        </div>
-        <div class="flex flex-col border-b border-gray-800 pb-2">
-          <label class="text-[10px] uppercase text-gray-500 mb-2">WhatsApp</label>
-          <input type="tel" id="telefone" required class="bg-transparent outline-none text-xl font-light">
-        </div>
-        <div class="md:col-span-2 pt-8">
-          <button type="button" onclick="enviarParaWhatsapp()" class="w-full bg-white text-black font-studio text-xl py-5 rounded-full uppercase">
-            Enviar Solicitação
-          </button>
-        </div>
-      </form>
+       <p class="text-gray-500">Clique no botão no menu para iniciar seu orçamento.</p>
     </div>
   </main>
 
