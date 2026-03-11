@@ -1,3 +1,4 @@
+// --- LÓGICA DE INICIALIZAÇÃO ---
 document.addEventListener('DOMContentLoaded', () => {
     loadComponent('header-placeholder', 'components/header.html');
     loadComponent('footer-placeholder', 'components/footer.html');
@@ -19,48 +20,47 @@ function loadComponent(elementId, url) {
         .catch(error => console.error('Error loading component:', error));
 }
 
-// --- ORÇAMENTO FORM LOGIC ---
+// --- ESTADO GLOBAL DA APLICAÇÃO ---
+let currentStep = 0;
+let userAnswers = {};
+let currentProject = 0;
+let currentImageIndex = 0;
 
+// --- DEFINIÇÃO DAS ETAPAS DO ORÇAMENTO ---
 const orcamentoSteps = [
     { id: 'nome', question: 'Qual é o seu nome completo?', type: 'text', placeholder: 'Digite seu nome' },
     { id: 'telefone', question: 'E o seu telefone?', type: 'text', inputType: 'tel', placeholder: 'DDD + Número' },
     { id: 'local', question: 'Onde será realizado o projeto?', type: 'text', placeholder: 'Cidade-Estado, Setor/Bairro' },
-    {
-        id: 'tipo_servico',
-        question: 'O que você procura?',
-        type: 'single',
-        options: ['Projeto arquitetônico', 'Projeto de interiores', 'Projeto de arquitetura e interiores']
-    },
-    {
-        id: 'tipo_imovel',
-        question: 'Que tipo de imóvel é?',
-        type: 'single',
-        options: ['Casa', 'Apartamento', 'Comercial', 'Outro']
-    },
-    {
-        id: 'estagio',
-        question: 'O projeto será em qual estágio?',
-        type: 'multiple',
-        options: ['Terreno recém-adquirido', 'Obra em andamento', 'Imóvel já construído', 'Ainda estou planejando']
-    },
-    {
-        id: 'metragem',
-        question: 'Qual é a metragem aproximada do imóvel?',
-        type: 'single',
-        options: ['Entre 50 e 100 m²', 'Entre 100 e 200 m²', 'Entre 200 e 400 m²', 'Acima de 400 m²']
-    },
-    {
-        id: 'prazo',
-        question: 'Quando pretende iniciar o projeto?',
-        type: 'single',
-        options: ['Nos próximos 30 dias', 'Nos próximos 3 meses', 'Dentro de 6 meses', 'Ainda estou apenas pesquisando']
-    }
+    { id: 'tipo_servico', question: 'O que você procura?', type: 'single', options: ['Projeto arquitetônico', 'Projeto de interiores', 'Projeto de arquitetura e interiores'] },
+    { id: 'tipo_imovel', question: 'Que tipo de imóvel é?', type: 'single', options: ['Casa', 'Apartamento', 'Comercial', 'Outro'] },
+    { id: 'estagio', question: 'O projeto será em qual estágio?', type: 'multiple', options: ['Terreno recém-adquirido', 'Obra em andamento', 'Imóvel já construído', 'Ainda estou planejando'] },
+    { id: 'metragem', question: 'Qual é a metragem aproximada do imóvel?', type: 'single', options: ['Entre 50 e 100 m²', 'Entre 100 e 200 m²', 'Entre 200 e 400 m²', 'Acima de 400 m²'] },
+    { id: 'prazo', question: 'Quando pretende iniciar o projeto?', type: 'single', options: ['Nos próximos 30 dias', 'Nos próximos 3 meses', 'Dentro de 6 meses', 'Ainda estou apenas pesquisando'] }
 ];
 
-let currentStep = 0;
-let userAnswers = {};
+// --- FUNÇÕES GLOBAIS (ANEXADAS AO WINDOW) ---
 
-function openOrcamentoForm() {
+window.toggleMenu = function() {
+    document.getElementById('menu-overlay').classList.toggle('translate-x-full');
+}
+
+window.navigate = function(pageId) {
+    if (document.getElementById('menu-overlay')){
+        document.getElementById('menu-overlay').classList.add('translate-x-full');
+    }
+    document.querySelectorAll('.page-section').forEach(section => {
+        section.classList.remove('active-page');
+    });
+    const target = document.getElementById(pageId);
+    if (target) {
+        target.classList.add('active-page');
+        window.scrollTo(0, 0);
+    }
+}
+
+// --- LÓGICA DO ORÇAMENTO ---
+
+window.openOrcamentoForm = function() {
     const overlay = document.getElementById('orcamento-overlay');
     if (document.getElementById('menu-overlay')) {
       document.getElementById('menu-overlay').classList.add('translate-x-full');
@@ -72,7 +72,7 @@ function openOrcamentoForm() {
     renderCurrentStep();
 }
 
-function closeOrcamentoForm() {
+window.closeOrcamentoForm = function() {
     const overlay = document.getElementById('orcamento-overlay');
     overlay.classList.add('opacity-0');
     setTimeout(() => overlay.classList.add('hidden'), 300);
@@ -101,7 +101,7 @@ function renderCurrentStep() {
     }
 
     content += `<div class="mt-8 flex justify-end">`;
-    if (currentStep < orcamentoSteps.length -1) {
+    if (currentStep < orcamentoSteps.length - 1) {
         content += `<button onclick="nextStep()" class="bg-black text-white px-8 py-3 rounded-full font-bold">Continuar</button>`;
     } else {
          content += `<button onclick="finishForm()" class="bg-green-500 text-white px-8 py-3 rounded-full font-bold flex items-center gap-2"><i class="fa-brands fa-whatsapp"></i> Enviar via WhatsApp</button>`;
@@ -110,18 +110,16 @@ function renderCurrentStep() {
 
     modal.innerHTML = content;
     
-    // Adiciona foco automático para campos de texto
     const input = document.getElementById('step-input');
     if (input) input.focus();
 }
 
-function selectOption(button, stepId, type) {
+window.selectOption = function(button, stepId, type) {
     if (type === 'single') {
         document.querySelectorAll('.option-button').forEach(btn => btn.classList.remove('selected'));
         button.classList.add('selected');
         userAnswers[stepId] = button.innerText;
 
-        // Mostra o campo de texto se "Outro" for selecionado
         const outroInput = document.getElementById('outro-input');
         if (outroInput) {
             outroInput.classList.toggle('hidden', button.innerText !== 'Outro');
@@ -139,7 +137,7 @@ function selectOption(button, stepId, type) {
     }
 }
 
-function nextStep() {
+window.nextStep = function() {
     const stepData = orcamentoSteps[currentStep];
     if (stepData.type === 'text') {
         const input = document.getElementById('step-input');
@@ -147,7 +145,6 @@ function nextStep() {
         userAnswers[stepData.id] = input.value;
     }
     
-    // Lógica para o campo "Outro"
     if (stepData.id === 'tipo_imovel' && userAnswers['tipo_imovel'] === 'Outro') {
         const outroInput = document.getElementById('outro-input');
         if (!outroInput.value) { alert('Por favor, especifique o tipo de imóvel.'); return; }
@@ -160,7 +157,7 @@ function nextStep() {
     }
 }
 
-function finishForm() {
+window.finishForm = function() {
     const stepData = orcamentoSteps[currentStep];
     if (userAnswers[stepData.id] === undefined && !userAnswers[stepData.id]?.length) {
          alert('Por favor, selecione uma opção.'); return; 
@@ -186,106 +183,72 @@ function finishForm() {
     closeOrcamentoForm();
 }
 
-function navigate(pageId) {
-      if (document.getElementById('menu-overlay')){
-        document.getElementById('menu-overlay').classList.add('translate-x-full');
-      }
-      document.querySelectorAll('.page-section').forEach(section => {
-        section.classList.remove('active-page');
-      });
-      const target = document.getElementById(pageId);
-      if (target) {
-        target.classList.add('active-page');
-        window.scrollTo(0, 0);
-      }
-    }
 
-    function renderHomeProjects() {
-      const grid = document.getElementById('home-projects-grid');
-      const homeProjects = projectsData.slice(0, 3);
-      grid.innerHTML = homeProjects.map(proj => `
-        <div class="snap-card cursor-pointer group" onclick="openGallery(${proj.id})">
-          <div class="aspect-[4/5] bg-gray-200 overflow-hidden mb-4 relative rounded-lg">
-             <img src="${proj.thumb}" 
-                  class="reveal-image w-full h-full object-cover group-hover:grayscale-0 transition-all duration-700" />
-          </div>
-          <h3 class="font-studio text-2xl uppercase leading-none">${proj.title}</h3>
-          <p class="text-[10px] font-bold uppercase text-gray-400 mt-1">${proj.location}</p>
+// --- LÓGICA DA GALERIA DE PROJETOS ---
+
+function renderHomeProjects() {
+    const grid = document.getElementById('home-projects-grid');
+    if (!grid) return;
+    const homeProjects = projectsData.slice(0, 3);
+    grid.innerHTML = homeProjects.map(proj => `
+      <div class="snap-card cursor-pointer group" onclick="openGallery(${proj.id})">
+        <div class="aspect-[4/5] bg-gray-200 overflow-hidden mb-4 relative rounded-lg">
+           <img src="${proj.thumb}" 
+                class="reveal-image w-full h-full object-cover group-hover:grayscale-0 transition-all duration-700" />
         </div>
-      `).join('');
-    }
+        <h3 class="font-studio text-2xl uppercase leading-none">${proj.title}</h3>
+        <p class="text-[10px] font-bold uppercase text-gray-400 mt-1">${proj.location}</p>
+      </div>
+    `).join('');
+}
 
-    function renderPortfolio() {
-      const grid = document.getElementById('grid-portfolio');
-      grid.innerHTML = projectsData.map(proj => `
-        <div class="cursor-pointer group" onclick="openGallery(${proj.id})">
-          <div class="aspect-square bg-gray-100 overflow-hidden mb-4 rounded-xl">
-            <img src="${proj.thumb}" alt="${proj.alt}" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 grayscale hover:grayscale-0">
-          </div>
-          <h3 class="font-studio text-xl uppercase">${proj.title}</h3>
-          <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">${proj.location}</p>
+function renderPortfolio() {
+    const grid = document.getElementById('grid-portfolio');
+    if (!grid) return;
+    grid.innerHTML = projectsData.map(proj => `
+      <div class="cursor-pointer group" onclick="openGallery(${proj.id})">
+        <div class="aspect-square bg-gray-100 overflow-hidden mb-4 rounded-xl">
+          <img src="${proj.thumb}" alt="${proj.alt}" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 grayscale hover:grayscale-0">
         </div>
-      `).join('');
-    }
+        <h3 class="font-studio text-xl uppercase">${proj.title}</h3>
+        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">${proj.location}</p>
+      </div>
+    `).join('');
+}
 
-    document.addEventListener('DOMContentLoaded', (event) => {
-        if (document.getElementById('home-projects-grid')) {
-            renderHomeProjects();
-        }
-        if (document.getElementById('grid-portfolio')) {
-            renderPortfolio();
-        }
-    });
+window.openGallery = function(projectId) {
+    const project = projectsData.find(p => p.id === projectId);
+    if (!project) return;
+    currentProject = projectId;
+    currentImageIndex = 0;
+    const overlay = document.getElementById('gallery-overlay');
+    overlay.classList.remove('hidden');
+    setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+    updateCarousel();
+}
 
-    function toggleMenu() {
-      document.getElementById('menu-overlay').classList.toggle('translate-x-full');
-    }
+window.closeGallery = function() {
+    const overlay = document.getElementById('gallery-overlay');
+    overlay.classList.add('opacity-0');
+    setTimeout(() => overlay.classList.add('hidden'), 300);
+}
 
-    let currentProject = 0;
-    let currentImageIndex = 0;
+function updateCarousel() {
+    const data = projectsData.find(p => p.id === currentProject);
+    const container = document.getElementById('carousel-container');
+    const total = data.images.length;
+    const prev = (currentImageIndex - 1 + total) % total;
+    const next = (currentImageIndex + 1) % total;
+    document.getElementById('gallery-title').innerText = data.title;
+    container.innerHTML = `
+      <img src="${data.images[prev]}" alt="${data.title}" loading="lazy" decoding="async" class="absolute left-[-10%] md:left-0 h-40 md:h-64 opacity-30 scale-75 blur-[1px] hidden md:block">
+      <img src="${data.images[currentImageIndex]}" alt="${data.title}" loading="lazy" decoding="async" class="z-20 h-auto max-h-[60vh] md:max-h-[70vh] max-w-[90vw] shadow-2xl rounded-lg">
+      <img src="${data.images[next]}" alt="${data.title}" loading="lazy" decoding="async" class="absolute right-[-10%] md:right-0 h-40 md:h-64 opacity-30 scale-75 blur-[1px] hidden md:block">
+    `;
+}
 
-    function openGallery(projectId) {
-      const project = projectsData.find(p => p.id === projectId);
-      if (!project) return;
-      currentProject = projectId;
-      currentImageIndex = 0;
-      const overlay = document.getElementById('gallery-overlay');
-      overlay.classList.remove('hidden');
-      setTimeout(() => overlay.classList.remove('opacity-0'), 10);
-      updateCarousel();
-    }
-
-    function closeGallery() {
-      const overlay = document.getElementById('gallery-overlay');
-      overlay.classList.add('opacity-0');
-      setTimeout(() => overlay.classList.add('hidden'), 300);
-    }
-
-    function updateCarousel() {
-      const data = projectsData.find(p => p.id === currentProject);
-      const container = document.getElementById('carousel-container');
-      const total = data.images.length;
-      const prev = (currentImageIndex - 1 + total) % total;
-      const next = (currentImageIndex + 1) % total;
-      document.getElementById('gallery-title').innerText = data.title;
-      container.innerHTML = `
-        <img src="${data.images[prev]}" alt="${data.title}" loading="lazy" decoding="async" class="absolute left-[-10%] md:left-0 h-40 md:h-64 opacity-30 scale-75 blur-[1px] hidden md:block">
-        <img src="${data.images[currentImageIndex]}" alt="${data.title}" loading="lazy" decoding="async" class="z-20 h-auto max-h-[60vh] md:max-h-[70vh] max-w-[90vw] shadow-2xl rounded-lg">
-        <img src="${data.images[next]}" alt="${data.title}" loading="lazy" decoding="async" class="absolute right-[-10%] md:right-0 h-40 md:h-64 opacity-30 scale-75 blur-[1px] hidden md:block">
-      `;
-    }
-
-    function changeSlide(dir) {
-      const proj = projectsData.find(p => p.id === currentProject);
-      currentImageIndex = (currentImageIndex + dir + proj.images.length) % proj.images.length;
-      updateCarousel();
-    }
-
-    function enviarParaWhatsapp() {
-      const nome = document.getElementById('nome').value;
-      const tel = document.getElementById('telefone').value;
-      if (!nome || !tel) { alert("Preencha nome e telefone!"); return; }
-
-      const texto = `*SOLICITAÇÃO DE ORÇAMENTO*%0A*Nome:* ${nome}%0A*Telefone:* ${tel}`;
-      window.open(`https://wa.me/5562992470702?text=${texto}`, '_blank');
-    }
+window.changeSlide = function(dir) {
+    const proj = projectsData.find(p => p.id === currentProject);
+    currentImageIndex = (currentImageIndex + dir + proj.images.length) % proj.images.length;
+    updateCarousel();
+}
