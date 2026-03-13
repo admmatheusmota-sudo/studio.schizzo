@@ -1,6 +1,6 @@
 // --- LÓGICA DE INICIALIZAÇÃO ---
 document.addEventListener('DOMContentLoaded', () => {
-    // Carrega header, footer e o formulário de orçamento em todas as páginas
+    // Carrega todos os componentes globais dinamicamente
     if (typeof window.loadGlobalComponents === 'function') {
         window.loadGlobalComponents();
     }
@@ -20,8 +20,8 @@ function loadComponent(elementId, url, callback) {
             const element = document.getElementById(elementId);
             if (element) {
                 element.innerHTML = data;
+                 if (callback) callback();
             }
-            if (callback) callback();
         })
         .catch(error => console.error(`Error loading component ${url}:`, error));
 }
@@ -35,10 +35,11 @@ window.loadGlobalComponents = function() {
             menuButton.addEventListener('click', () => window.toggleMenu());
         }
     });
+    // Carrega os componentes de overlay (menu e orçamento)
+    loadComponent('menu-placeholder', 'components/menu.html');
+    loadComponent('orcamento-placeholder', 'components/orcamento.html');
     // Carrega o rodapé
     loadComponent('footer-placeholder', 'components/footer.html');
-    // Carrega o formulário de orçamento
-    loadComponent('orcamento-placeholder', 'components/orcamento.html');
 }
 
 // Controla a visibilidade do menu overlay
@@ -51,10 +52,11 @@ window.toggleMenu = function() {
 
 // Navegação para seções DENTRO da home page (ex: Sobre)
 window.navigate = function(pageId) {
-    if (document.getElementById('menu-overlay')) {
-        document.getElementById('menu-overlay').classList.add('translate-x-full');
+    const menuOverlay = document.getElementById('menu-overlay');
+     if (menuOverlay) {
+        menuOverlay.classList.add('translate-x-full');
     }
-    // Garante que estamos na home antes de tentar navegar para uma seção
+
     if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
         document.querySelectorAll('.page-section').forEach(section => {
             section.classList.remove('active-page');
@@ -64,19 +66,16 @@ window.navigate = function(pageId) {
             target.classList.add('active-page');
             window.scrollTo(0, 0);
         } else {
-          // Se o alvo não existe, apenas volta para a home
           const home = document.getElementById('home');
           if(home) home.classList.add('active-page');
         }
     } else {
-      // Se não estamos na home, redireciona para a home e ancora na seção (se aplicável)
       window.location.href = `index.html#${pageId}`;
     }
 }
 
 // --- LÓGICA DA HOME PAGE ---
 
-// Renderiza os projetos selecionados na home com links para a página de projeto
 function renderHomeProjects() {
     const grid = document.getElementById('home-projects-grid');
     if (!grid || typeof projectsData === 'undefined') return;
@@ -110,18 +109,19 @@ const orcamentoSteps = [
 ];
 
 window.openOrcamentoForm = function() {
-    const overlay = document.getElementById('orcamento-overlay');
-    // Fecha o menu principal se estiver aberto
-    if (document.getElementById('menu-overlay')) {
-      document.getElementById('menu-overlay').classList.add('translate-x-full');
+    const orcamentoOverlay = document.getElementById('orcamento-overlay');
+    const menuOverlay = document.getElementById('menu-overlay');
+
+    if (menuOverlay) {
+      menuOverlay.classList.add('translate-x-full');
     }
-    // Checagem de segurança para garantir que o overlay existe antes de manipulá-lo
-    if (!overlay) {
+
+    if (!orcamentoOverlay) {
         console.error('Elemento #orcamento-overlay não encontrado. O componente foi carregado?');
         return;
     }
-    overlay.classList.remove('hidden');
-    setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+    orcamentoOverlay.classList.remove('hidden');
+    setTimeout(() => orcamentoOverlay.classList.remove('opacity-0'), 10);
     currentStep = 0;
     userAnswers = {};
     renderCurrentStep();
