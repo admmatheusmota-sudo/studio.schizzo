@@ -1,12 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // A função loadGlobalComponents de main.js agora cuidará de todos os componentes globais.
-    if (typeof window.loadGlobalComponents === 'function') {
-        window.loadGlobalComponents();
-    } else {
-        console.error('A função loadGlobalComponents não foi encontrada. Verifique se o main.js foi carregado corretamente.');
-        return; // Interrompe a execução se a função principal estiver ausente.
-    }
-
+    // A inicialização dos componentes globais agora é gerenciada pelo main.js.
+    // Apenas a lógica específica da página de projeto precisa ser executada aqui.
+    
     // Pega o ID do projeto da URL.
     const urlParams = new URLSearchParams(window.location.search);
     const projectId = parseInt(urlParams.get('id'), 10);
