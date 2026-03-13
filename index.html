@@ -28,14 +28,12 @@
 
   <div id="menu-overlay" class="fixed inset-0 bg-white z-30 translate-x-full flex flex-col justify-center px-10">
     <div class="flex flex-col gap-8 text-4xl md:text-6xl font-studio text-right">
-      <a href="index.html" class="cursor-pointer hover:text-gray-400 transition-colors">Home</a>
+      <a onclick="navigate('home')" class="cursor-pointer hover:text-gray-400 transition-colors">Home</a>
       <a href="portfolio.html" class="cursor-pointer hover:text-gray-400 transition-colors">Portfólio</a>
       <a onclick="navigate('sobre-full')" class="cursor-pointer hover:text-gray-400 transition-colors">Sobre Nós</a>
       <a onclick="openOrcamentoForm()" class="cursor-pointer text-blue-600 hover:text-black transition-colors">Solicitar Orçamento</a>
     </div>
   </div>
-
-  <!-- Overlays (formulário, galeria, etc.) permanecem aqui -->
 
   <main id="home" class="page-section active-page">
      <header class="px-6 py-12 md:py-20 mb-8 max-w-7xl mx-auto text-center">
@@ -50,12 +48,73 @@
       <div id="home-projects-grid" class="horizontal-scroll md:gap-8"></div>
     </section>
 
-    <!-- Seções "A Essência" e "Localização" permanecem inalteradas -->
+     <section class="px-6 md:px-12 mb-10 max-w-7xl mx-auto">
+      <h2 class="font-studio text-4xl mb-8">A Essência.</h2>
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div class="aspect-[4/3] bg-gray-200 overflow-hidden rounded-[2rem] group">
+           <img src="https://i.postimg.cc/23pkk5gZ/IMG-3608.avif" alt="Arquitetas Isabella e Julia do Studio Schizzo"
+                class="reveal-image w-full h-full object-cover group-hover:grayscale-0 transition-all duration-700"  loading="lazy" decoding="async" />
+        </div>
+        <div>
+          <h3 class="text-2xl font-bold uppercase mb-6 italic">Prazer, somos Isabella & Julia</h3>
+          <p class="text-sm text-gray-600 leading-relaxed text-justify">
+            Arquitetas e urbanistas com mais de 6 anos de experiência, criamos projetos que traduzem o estilo de vida de cada cliente com elegância, funcionalidade e soluções bem resolvidas.
+            <br><br>
+            No Studio Schizzo, acreditamos que a verdadeira sofisticação é aquela que se vive no dia a dia.
+          </p>
+          <div class="mt-6 flex gap-4">
+            <span class="text-[10px] font-black uppercase border px-3 py-1 rounded-full">Arquitetura</span>
+            <span class="text-[10px] font-black uppercase border px-3 py-1 rounded-full">Interiores</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  </main>
+    <section class="px-6 md:px-12 mb-8 max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-0 border-t border-b border-gray-100">
+
+        <div class="flex flex-col justify-center p-8 md:p-20 bg-white">
+          <div class="border-l-4 border-black pl-6 md:pl-8 py-2">
+            <p class="text-[10px] font-bold uppercase tracking-[0.4em] text-gray-400 mb-6">Localização & Atuação</p>
+
+            <div class="space-y-4">
+              <div class="group cursor-default">
+                <p class="text-3xl md:text-2xl font-studio uppercase leading-none text-gray-300 group-hover:text-black group-hover:pl-2 transition-all duration-700">Goiânia — GO</p>
+              </div>
+
+              <div class="group cursor-default">
+                <p class="text-3xl md:text-2xl font-studio uppercase leading-none text-gray-300 group-hover:text-black group-hover:pl-2 transition-all duration-700">Brasília — DF</p>
+              </div>
+
+              <div class="group cursor-default">
+                <p class="text-3xl md:text-2xl font-studio uppercase leading-none text-gray-300 group-hover:text-black group-hover:pl-2 transition-all duration-700">Anápolis — GO</p>
+              </div>
+            </div>
+
+          </div>
+          
+          <p class="mt-0 md:mt-0 text-xs text-gray-400 leading-relaxed max-w-sm text-justify">
+            Disponível para projetos presenciais nas regiões selecionadas e consultoria online para todo o Brasil e exterior.
+          </p>
+        </div>
+
+      </div>
+    </section>
+    <section class="w-full mb-0 overflow-hidden">
+      <div class="relative h-64 md:h-96 overflow-hidden group w-full">
+            <img src="https://images.unsplash.com/photo-1486718448742-163732cd1544?q=80&w=1000&auto=format&fit=crop"
+                 class="absolute inset-0 w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105 grayscale"
+                 loading="lazy" decoding="async" alt="Textura Arquitetônica">
+            <div class="absolute inset-0 bg-black/10"></div>
+      </div>
+    </section>
+</main>
 
   <main id="sobre-full" class="page-section bg-white px-6">
-      <!-- Conteúdo da página Sobre -->
+    <div class="max-w-7xl mx-auto py-12">
+      <h2 class="text-5xl md:text-7xl font-studio italic uppercase mb-12">Sobre Nós.</h2>
+      <p class="text-gray-500 italic">Área em desenvolvimento para depoimentos e equipe...</p>
+    </div>
   </main>
 
   <!-- Elementos Globais -->
