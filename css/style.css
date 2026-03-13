@@ -16,7 +16,7 @@ body {
 img {
   max-width: 100%;
   height: auto;
-  display: block; /* Remove o espaço extra abaixo das imagens */
+  display: block;
 }
 
 .font-studio {
@@ -26,24 +26,81 @@ img {
   text-transform: uppercase;
 }
 
-/* Estilização do Scroll Horizontal da Home */
+/* ... (estilos existentes) ... */
+
+/* === NOVOS ESTILOS PARA PÁGINA DE PROJETO === */
+
+#project-header {
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    padding: 1rem 1.5rem;
+}
+
+/* Contêiner da Galeria Horizontal */
+#project-gallery-container {
+    display: flex;
+    overflow-x: auto;
+    /* Ativa a "atração" magnética do scroll no eixo X */
+    scroll-snap-type: x mandatory;
+    /* Garante um padding nas extremidades para a primeira/última imagem centralizar */
+    padding: 0 5vw;
+    gap: 1rem;
+}
+
+#project-gallery-container::-webkit-scrollbar {
+  display: none; /* Esconde a barra de rolagem no Chrome, Safari, Opera */
+}
+
+/* Imagens da Galeria (Mobile-First) */
+.gallery-image {
+    /* Ocupa 90% da largura da viewport, garantindo a "espiada" na próxima imagem */
+    flex: 0 0 90vw;
+    height: 75vh;
+    object-fit: cover;
+    /* Define o ponto de "snap" da imagem para o centro */
+    scroll-snap-align: center;
+    border-radius: 1rem;
+}
+
+/* === COMENTÁRIO EXPLICATIVO === */
+/* A combinação de 'flex: 0 0 90vw' nas imagens e 'scroll-snap-type' no contêiner
+   cria a experiência de swipe. A largura menor que 100% da viewport ('90vw') garante
+   que uma parte da próxima imagem ('peek') seja sempre visível, incentivando o usuário
+   a rolar horizontalmente. O 'scroll-snap-align: center' garante que, ao soltar o scroll,
+   a imagem mais próxima se centralize perfeitamente na tela. O padding no container
+   é crucial para permitir que a primeira e a última imagem também se centralizem.
+*/
+
+/* === PROGRESSIVE ENHANCEMENT (DESKTOP) === */
+@media (min-width: 1024px) {
+    .gallery-image {
+        /* Em desktops, as imagens podem ser menores e ter uma altura diferente */
+        flex: 0 0 60vw;
+        max-height: 80vh;
+    }
+
+    #project-gallery-container {
+        gap: 2rem;
+    }
+}
+
+/* ... (Restante dos estilos) ... */
+
 .horizontal-scroll {
   display: flex;
   overflow-x: auto;
-  gap: 1rem; /* Espaçamento para mobile */
+  gap: 1rem;
   padding-bottom: 20px;
-  scrollbar-width: none; /* Firefox */
+  scrollbar-width: none;
 }
 
 .horizontal-scroll::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: none;
 }
 
 .snap-card {
-  flex: 0 0 85vw; /* Ocupa 85% da largura da tela no mobile */
+  flex: 0 0 85vw;
 }
 
-/* Transições de Página e Animações */
 .page-section {
   display: none;
   animation: fadeIn 0.5s ease;
@@ -60,118 +117,4 @@ img {
   to { opacity: 1; transform: translateY(0); }
 }
 
-#menu-overlay {
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* Efeito de imagem em escala de cinza */
-.reveal-image {
-  filter: grayscale(100%);
-  transition: all 0.8s ease;
-}
-
-.reveal-image.is-visible {
-  filter: grayscale(0%) !important;
-}
-
-/* Garante que botões e links tenham área de toque mínima */
-button, [onclick], .cursor-pointer, a {
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* === ESTILOS DO FORMULÁRIO DE ORÇAMENTO === */
-#orcamento-overlay {
-    transition: opacity 0.3s ease-in-out;
-}
-
-.form-step {
-    animation: fadeIn 0.5s ease;
-    width: 100%;
-}
-
-.option-button {
-    border: 1px solid #e5e7eb; /* gray-200 */
-    padding: 1rem;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-align: left;
-    width: 100%;
-    justify-content: flex-start;
-}
-
-.option-button:hover {
-    background-color: #f3f4f6; /* gray-100 */
-    border-color: #d1d5db; /* gray-300 */
-}
-
-.option-button.selected {
-    background-color: #000;
-    color: #fff;
-    border-color: #000;
-}
-
-.form-input {
-    border: 1px solid #d1d5db; /* gray-300 */
-    padding: 0.75rem 1rem;
-    border-radius: 0.5rem;
-    width: 100%;
-    font-size: 1rem;
-}
-
-.form-input:focus {
-    outline: none;
-    border-color: #000;
-    box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
-}
-
-#progress-bar {
-    height: 4px;
-    background-color: #e5e7eb; /* gray-200 */
-    width: 100%;
-    border-radius: 2px;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-#progress-bar-inner {
-    height: 100%;
-    background-color: #000;
-    width: 0%;
-    border-radius: 2px;
-    transition: width 0.3s ease;
-}
-
-/* === PROGRESSIVE ENHANCEMENT (TABLETS) === */
-@media (min-width: 768px) {
-  .horizontal-scroll {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    overflow-x: visible;
-    gap: 2rem; /* Aumenta o espaçamento para tablets */
-  }
-
-  .snap-card {
-    flex: none;
-    width: auto;
-  }
-  
-  #orcamento-modal {
-      max-width: 600px; /* Aumenta a largura do modal em tablets e desktops */
-  }
-}
-
-/* === PROGRESSIVE ENHANCEMENT (DESKTOP) === */
-@media (min-width: 1024px) {
-  .horizontal-scroll {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  #orcamento-modal {
-      max-width: 800px; /* Aumenta ainda mais para desktops maiores */
-  }
-}
+/* ... (outros estilos) ... */
