@@ -159,11 +159,19 @@ button, [onclick], .cursor-pointer, a {
     flex: none;
     width: auto;
   }
+  
+  #orcamento-modal {
+      max-width: 600px; /* Aumenta a largura do modal em tablets e desktops */
+  }
 }
 
 /* === PROGRESSIVE ENHANCEMENT (DESKTOP) === */
 @media (min-width: 1024px) {
   .horizontal-scroll {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  #orcamento-modal {
+      max-width: 800px; /* Aumenta ainda mais para desktops maiores */
   }
 }
