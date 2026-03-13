@@ -1,8 +1,8 @@
 // --- LÓGICA DE INICIALIZAÇÃO ---
 document.addEventListener('DOMContentLoaded', () => {
-    // Carrega header e footer em todas as páginas
-    if (typeof loadHeaderAndFooter === 'function') {
-        loadHeaderAndFooter();
+    // Carrega header, footer e o formulário de orçamento em todas as páginas
+    if (typeof window.loadGlobalComponents === 'function') {
+        window.loadGlobalComponents();
     }
 
     // Renderiza os projetos *apenas* se o grid da home existir
@@ -23,19 +23,26 @@ function loadComponent(elementId, url, callback) {
             }
             if (callback) callback();
         })
-        .catch(error => console.error('Error loading component:', error));
+        .catch(error => console.error(`Error loading component ${url}:`, error));
 }
 
-// Função global para carregar header/footer, acessível por outros scripts
-window.loadHeaderAndFooter = function() {
+// Função global para carregar todos os componentes globais
+window.loadGlobalComponents = function() {
+    // Carrega o cabeçalho e, no callback, anexa o evento de menu
     loadComponent('header-placeholder', 'components/header.html', () => {
         const menuButton = document.querySelector('.mobile-menu-button');
         if (menuButton) {
             menuButton.addEventListener('click', () => window.toggleMenu());
         }
     });
+    // Carrega o rodapé
     loadComponent('footer-placeholder', 'components/footer.html');
+    // Carrega o formulário de orçamento
+    loadComponent('orcamento-placeholder', 'components/orcamento.html');
 }
+
+// Renomeada para consistência
+window.loadHeaderAndFooter = window.loadGlobalComponents;
 
 // Controla a visibilidade do menu overlay
 window.toggleMenu = function() {
@@ -65,8 +72,8 @@ window.navigate = function(pageId) {
           if(home) home.classList.add('active-page');
         }
     } else {
-      // Se não estamos na home, redireciona para a home
-      window.location.href = 'index.html';
+      // Se não estamos na home, redireciona para a home e ancora na seção (se aplicável)
+      window.location.href = `index.html#${pageId}`;
     }
 }
 
@@ -89,7 +96,7 @@ function renderHomeProjects() {
     `).join('');
 }
 
-// --- LÓGICA DO FORMULÁRIO DE ORÇAMENTO (Inalterada) ---
+// --- LÓGICA DO FORMULÁRIO DE ORÇAMENTO ---
 
 let currentStep = 0;
 let userAnswers = {};
@@ -107,8 +114,14 @@ const orcamentoSteps = [
 
 window.openOrcamentoForm = function() {
     const overlay = document.getElementById('orcamento-overlay');
+    // Fecha o menu principal se estiver aberto
     if (document.getElementById('menu-overlay')) {
       document.getElementById('menu-overlay').classList.add('translate-x-full');
+    }
+    // Checagem de segurança para garantir que o overlay existe antes de manipulá-lo
+    if (!overlay) {
+        console.error('Elemento #orcamento-overlay não encontrado. O componente foi carregado?');
+        return;
     }
     overlay.classList.remove('hidden');
     setTimeout(() => overlay.classList.remove('opacity-0'), 10);
@@ -119,12 +132,14 @@ window.openOrcamentoForm = function() {
 
 window.closeOrcamentoForm = function() {
     const overlay = document.getElementById('orcamento-overlay');
+    if (!overlay) return;
     overlay.classList.add('opacity-0');
     setTimeout(() => overlay.classList.add('hidden'), 300);
 }
 
 function renderCurrentStep() {
     const modal = document.getElementById('orcamento-modal');
+    if (!modal) return;
     const stepData = orcamentoSteps[currentStep];
     const progress = ((currentStep + 1) / orcamentoSteps.length) * 100;
     let content = `<div id="progress-bar"><div id="progress-bar-inner" style="width: ${progress}%"></div></div>`;
@@ -142,7 +157,11 @@ function renderCurrentStep() {
         }
         content += `</div>`;
     }
-    content += `<div class="mt-8 flex justify-end">`;
+    content += `<div class="mt-8 flex justify-between items-center">`;
+     if (currentStep > 0) {
+        content += `<button onclick="prevStep()" class="text-sm text-gray-500 hover:text-black">Voltar</button>`;
+    }
+    else { content += `<span></span>`}
     if (currentStep < orcamentoSteps.length - 1) {
         content += `<button onclick="nextStep()" class="bg-black text-white px-8 py-3 rounded-full font-bold">Continuar</button>`;
     } else {
@@ -174,7 +193,12 @@ window.selectOption = function(button, stepId, type) {
         }
     }
 }
-
+window.prevStep = function() {
+    if (currentStep > 0) {
+        currentStep--;
+        renderCurrentStep();
+    }
+}
 window.nextStep = function() {
     const stepData = orcamentoSteps[currentStep];
     if (stepData.type === 'text') {
