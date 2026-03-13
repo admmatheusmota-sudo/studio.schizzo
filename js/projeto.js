@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // A função loadHeaderAndFooter de main.js agora cuidará do cabeçalho e rodapé.
-    if (typeof window.loadHeaderAndFooter === 'function') {
-        window.loadHeaderAndFooter();
+    // A função loadGlobalComponents de main.js agora cuidará de todos os componentes globais.
+    if (typeof window.loadGlobalComponents === 'function') {
+        window.loadGlobalComponents();
     } else {
-        console.error('A função loadHeaderAndFooter não foi encontrada. Verifique se o main.js foi carregado corretamente.');
+        console.error('A função loadGlobalComponents não foi encontrada. Verifique se o main.js foi carregado corretamente.');
         return; // Interrompe a execução se a função principal estiver ausente.
     }
 
@@ -31,8 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Define o título da página.
     document.title = `Studio Schizzo | ${project.title}`;
-
-    // A lógica de popular o #project-header foi REMOVIDA, pois o cabeçalho agora é carregado globalmente.
 
     // Popula a seção de informações do projeto (Ficha Técnica).
     const infoSection = document.getElementById('project-info');

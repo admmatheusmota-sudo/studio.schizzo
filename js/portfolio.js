@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Garante que a função global para carregar header/footer exista e a executa.
-    if (typeof window.loadHeaderAndFooter === 'function') {
-        window.loadHeaderAndFooter();
+    // Garante que a função global para carregar componentes exista e a executa.
+    if (typeof window.loadGlobalComponents === 'function') {
+        window.loadGlobalComponents();
     } else {
-        console.error('A função loadHeaderAndFooter não foi encontrada. Verifique se o main.js foi carregado corretamente.');
+        console.error('A função loadGlobalComponents não foi encontrada. Verifique se o main.js foi carregado corretamente.');
     }
 
     // Renderiza a grade de projetos do portfólio.

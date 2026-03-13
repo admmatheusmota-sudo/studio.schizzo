@@ -41,9 +41,6 @@ window.loadGlobalComponents = function() {
     loadComponent('orcamento-placeholder', 'components/orcamento.html');
 }
 
-// Renomeada para consistência
-window.loadHeaderAndFooter = window.loadGlobalComponents;
-
 // Controla a visibilidade do menu overlay
 window.toggleMenu = function() {
     const menuOverlay = document.getElementById('menu-overlay');
