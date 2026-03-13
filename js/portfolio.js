@@ -1,20 +1,32 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Carrega o header e footer reutilizáveis
-    loadHeaderAndFooter();
+    // Garante que a função global para carregar header/footer exista e a executa.
+    if (typeof window.loadHeaderAndFooter === 'function') {
+        window.loadHeaderAndFooter();
+    } else {
+        console.error('A função loadHeaderAndFooter não foi encontrada. Verifique se o main.js foi carregado corretamente.');
+    }
 
-    const portfolioGrid = document.getElementById('grid-portfolio');
-    if (!portfolioGrid) return;
-
-    projectsData.forEach(project => {
-        const projectCard = `
-            <a href="projeto.html?id=${project.id}" class="block group">
-                <div class="aspect-[4/5] overflow-hidden rounded-2xl bg-gray-100">
-                    <img src="${project.thumb}" alt="${project.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
-                </div>
-                <h3 class="font-bold text-lg mt-4">${project.title}</h3>
-                <p class="text-sm text-gray-500">${project.location}</p>
-            </a>
-        `;
-        portfolioGrid.innerHTML += projectCard;
-    });
+    // Renderiza a grade de projetos do portfólio.
+    renderPortfolioGrid();
 });
+
+function renderPortfolioGrid() {
+    const grid = document.getElementById('grid-portfolio');
+    // Garante que a grade e os dados dos projetos existam antes de continuar.
+    if (!grid || typeof projectsData === 'undefined') {
+        console.error('O elemento #grid-portfolio ou os dados dos projetos (projectsData) não foram encontrados.');
+        return;
+    }
+
+    // Gera o HTML para cada card de projeto e o insere na grade.
+    grid.innerHTML = projectsData.map(proj => `
+      <a href="projeto.html?id=${proj.id}" class="group block">
+        <div class="aspect-square bg-gray-100 overflow-hidden mb-4 rounded-xl">
+          <img src="${proj.thumb}" alt="${proj.alt || proj.title}" loading="lazy" decoding="async" 
+               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out">
+        </div>
+        <h3 class="font-studio text-xl uppercase">${proj.title}</h3>
+        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">${proj.location}</p>
+      </a>
+    `).join('');
+}
