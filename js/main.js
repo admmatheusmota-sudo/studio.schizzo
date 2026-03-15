@@ -62,12 +62,17 @@ window.initializeSite = async function() {
  * Anexa todos os listeners de eventos globais DEPOIS que os componentes foram carregados.
  */
 function attachGlobalEventListeners() {
+    // Anexa o evento para o botão de menu
     const menuButton = document.querySelector('.mobile-menu-button');
     if (menuButton) {
         menuButton.addEventListener('click', () => window.toggleMenu());
     }
 
-    // Você pode adicionar outros listeners globais aqui se necessário.
+    // Anexa o evento para o link do logo
+    const logoLink = document.getElementById('home-logo-link');
+    if (logoLink) {
+        logoLink.addEventListener('click', () => window.navigate('home'));
+    }
 }
 
 // --- FUNÇÕES GLOBAIS (TOGGLE, NAVIGATE, ETC.) ---
@@ -103,7 +108,6 @@ window.openOrcamentoForm = function() {
 }
 
 // DEPRECATED: Esta função é agora substituída por `initializeSite`.
-// Deixada aqui para compatibilidade caso algum script antigo a chame.
 window.loadGlobalComponents = function() {
     console.warn("loadGlobalComponents está obsoleta. Use initializeSite.");
     window.initializeSite();
@@ -155,32 +159,32 @@ function renderCurrentStep() {
     if (!modal) return;
     const stepData = orcamentoSteps[currentStep];
     const progress = ((currentStep + 1) / orcamentoSteps.length) * 100;
-    let content = \`<div id="progress-bar"><div id="progress-bar-inner" style="width: \${progress}%"></div></div>\`;
-    content += \`<div class="form-step">\`;
-    content += \`<h3 class="text-2xl font-bold mb-6">\${stepData.question}</h3>\`;
+    let content = `<div id="progress-bar"><div id="progress-bar-inner" style="width: ${progress}%"></div></div>`;
+    content += `<div class="form-step">`;
+    content += `<h3 class="text-2xl font-bold mb-6">${stepData.question}</h3>`;
     if (stepData.type === 'text') {
-        content += \`<input type="\${stepData.inputType || 'text'}" id="step-input" class="form-input" placeholder="\${stepData.placeholder || ''}" />\`;
+        content += `<input type="${stepData.inputType || 'text'}" id="step-input" class="form-input" placeholder="${stepData.placeholder || ''}" />`;
     } else if (stepData.type === 'single' || stepData.type === 'multiple') {
-        content += \`<div class="flex flex-col gap-3">\`;
+        content += `<div class="flex flex-col gap-3">`;
         stepData.options.forEach(option => {
-            content += \`<button class="option-button" onclick="selectOption(this, '\${stepData.id}', '\${stepData.type}')">\${option}</button>\`;
+            content += `<button class="option-button" onclick="selectOption(this, '${stepData.id}', '${stepData.type}')">${option}</button>`;
         });
         if (stepData.options.includes('Outro')) {
-             content += \`<input type="text" id="outro-input" class="form-input mt-2 hidden" placeholder="Qual?" />\`;
+             content += `<input type="text" id="outro-input" class="form-input mt-2 hidden" placeholder="Qual?" />`;
         }
-        content += \`</div>\`;
+        content += `</div>`;
     }
-    content += \`<div class="mt-8 flex justify-between items-center">\`;
+    content += `<div class="mt-8 flex justify-between items-center">`;
      if (currentStep > 0) {
-        content += \`<button onclick="prevStep()" class="text-sm text-gray-500 hover:text-black">Voltar</button>\`;
+        content += `<button onclick="prevStep()" class="text-sm text-gray-500 hover:text-black">Voltar</button>`;
     }
-    else { content += \`<span></span>\`}\`
+    else { content += `<span></span>`}
     if (currentStep < orcamentoSteps.length - 1) {
-        content += \`<button onclick="nextStep()" class="bg-black text-white px-8 py-3 rounded-full font-bold">Continuar</button>\`;
+        content += `<button onclick="nextStep()" class="bg-black text-white px-8 py-3 rounded-full font-bold">Continuar</button>`;
     } else {
-         content += \`<button onclick="finishForm()" class="bg-green-500 text-white px-8 py-3 rounded-full font-bold flex items-center gap-2"><i class="fa-brands fa-whatsapp"></i> Enviar via WhatsApp</button>\`;
+         content += `<button onclick="finishForm()" class="bg-green-500 text-white px-8 py-3 rounded-full font-bold flex items-center gap-2"><i class="fa-brands fa-whatsapp"></i> Enviar via WhatsApp</button>`;
     }
-    content += \`</div></div>\`;
+    content += `</div></div>`;
     modal.innerHTML = content;
     const input = document.getElementById('step-input');
     if (input) input.focus();
@@ -222,7 +226,7 @@ window.nextStep = function() {
     if (stepData.id === 'tipo_imovel' && userAnswers['tipo_imovel'] === 'Outro') {
         const outroInput = document.getElementById('outro-input');
         if (!outroInput.value) { alert('Por favor, especifique o tipo de imóvel.'); return; }
-        userAnswers['tipo_imovel'] = \`Outro: \${outroInput.value}\`;
+        userAnswers['tipo_imovel'] = `Outro: ${outroInput.value}`;
     }
     if (currentStep < orcamentoSteps.length - 1) {
         currentStep++;
@@ -235,21 +239,21 @@ window.finishForm = function() {
     if (userAnswers[stepData.id] === undefined && !userAnswers[stepData.id]?.length) {
          alert('Por favor, selecione uma opção.'); return; 
     }
-    let message = \`*NOVO PEDIDO DE ORÇAMENTO*%0A--- --- ---%0A\`;
+    let message = `*NOVO PEDIDO DE ORÇAMENTO*%0A--- --- ---%0A`;
     orcamentoSteps.forEach(step => {
         const answer = userAnswers[step.id];
-        message += \`*${step.question}*%0A\`;
+        message += `*${step.question}*%0A`;
         if (answer) {
             if (Array.isArray(answer)) {
                 message += answer.join(', ') + '%0A%0A';
             } else {
-                message += \`\${answer}%0A%0A\`;
+                message += `${answer}%0A%0A`;
             }
         } else {
-            message += \`Não preenchido%0A%0A\`;
+            message += `Não preenchido%0A%0A`;
         }
     });
-    const whatsappUrl = \`https://wa.me/5562992470702?text=\${message}\`;
+    const whatsappUrl = `https://wa.me/5562992470702?text=${message}`;
     window.open(whatsappUrl, '_blank');
     closeOrcamentoForm();
 }
@@ -274,6 +278,6 @@ window.navigate = function(pageId) {
           if(home) home.classList.add('active-page');
         }
     } else {
-      window.location.href = \`index.html#\${pageId}\`;
+      window.location.href = `index.html#${pageId}`;
     }
 }
